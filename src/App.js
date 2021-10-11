@@ -10,6 +10,7 @@ import {CirclePicker} from 'react-color';
 const qrCode = new QRCodeStyling({
     width: 500,
     height: 500,
+    margin: 0,
     image:
         "https://i.imgur.com/tNAOrkK.png",
     dotsOptions: {
@@ -18,7 +19,7 @@ const qrCode = new QRCodeStyling({
     },
     imageOptions: {
         crossOrigin: "anonymous",
-        hideBackgroundDots: true,
+        hideBackgroundDots: false,
     }
 });
 
