@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import QrEditor from './QrEditor'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-      <App/>
+      <QrEditor/>
   </React.StrictMode>,
   document.getElementById('root')
 );
