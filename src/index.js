@@ -4,11 +4,7 @@ import './index.css';
 import QrEditor from './QrEditor'
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-      <QrEditor/>
-  </React.StrictMode>,
-  document.getElementById('root')
+ReactDOM.render(<QrEditor/>, document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
