@@ -211,7 +211,7 @@ export default class QrEditor extends React.Component {
         return (
             <div className="QrEditor">
                 <div className="p-grid p-nogutter">
-                    <div className="p-col-3 p-lg-4 p-text-center">
+                    <div className="p-col-12 p-lg-4 p-text-center">
                         <label className="custom-file-upload">
                             <input type="file" accept="image/png, image/jpeg" onChange={ e => (this.onImageSelectorClick(e.target.files))}/>Choose your file
                         </label>
@@ -226,7 +226,7 @@ export default class QrEditor extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="p-col-3 p-lg-4">
+                    <div className="p-col-12 p-lg-4">
                         <Panel header="Shape & Form" toggleable collapsed={this.state.dotsOptionPanelCollapsed} onToggle={(e) => this.setState({dotsOptionPanelCollapsed : e.value})}>
                             <section>
                                 <h5>Dots shape</h5>
@@ -248,7 +248,7 @@ export default class QrEditor extends React.Component {
                             <Slider value={this.state.qrOptions.imageOptions.imageSize * 10} onChange={(e) => this.setLogoSize(e.value)} min={3} max={6} />
                         </Panel>
                     </div>
-                    <div className="p-col-3 p-lg-4">
+                    <div className="p-col-12 p-lg-4">
                         <div style={{width: 500 , height: 500 }} ref={this.qrImage}/>
                             <div className="p-col">
                                 <Button label="Download QrCode" onClick={ e => this.onDownloadButtonClick(e)}/>
