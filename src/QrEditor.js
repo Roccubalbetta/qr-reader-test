@@ -85,22 +85,19 @@ export default class QrEditor extends React.Component {
     }
 
     componentDidMount() {
-        this.state.qrCode.update(this.state.qrOptions)
-        this.state.qrCode.append(this.qrImage.current)
-        this.qrImage.current.lastChild.setAttribute("preserveAspectRatio","none")
-        this.qrImage.current.lastChild.setAttribute("viewBox", "0 0 1000 1000")
-        this.qrImage.current.lastChild.removeAttribute("height")
-        this.qrImage.current.lastChild.removeAttribute("width")
-
+        this.state.qrCode.update(this.state.qrOptions);
+        this.state.qrCode.append(this.qrImage.current);
+        this.qrImage.current.firstChild.setAttribute('viewBox', '0 0 1000 1000')
+        this.qrImage.current.firstChild.removeAttribute("height")
+        this.qrImage.current.firstChild.removeAttribute("width")
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevState.qrOptions !== this.state.qrOptions){
             this.state.qrCode.update(this.state.qrOptions)
-            this.qrImage.current.lastChild.setAttribute("preserveAspectRatio","none")
-            this.qrImage.current.lastChild.setAttribute("viewBox", "0 0 1000 1000")
-            this.qrImage.current.lastChild.removeAttribute("height")
-            this.qrImage.current.lastChild.removeAttribute("width")
+            this.qrImage.current.firstChild.setAttribute('viewBox', '0 0 1000 1000')
+            this.qrImage.current.firstChild.removeAttribute("height")
+            this.qrImage.current.firstChild.removeAttribute("width")
         }
     }
 
@@ -249,7 +246,7 @@ export default class QrEditor extends React.Component {
                         </Panel>
                     </div>
                     <div className="p-col-12 p-lg-4">
-                        <div style={{width: 500 , height: 500 }} ref={this.qrImage}/>
+                        <div style={{width : 500, height :500}} ref={this.qrImage}/>
                             <div className="p-col">
                                 <Button label="Download QrCode" onClick={ e => this.onDownloadButtonClick(e)}/>
                                 <Dropdown value={this.state.selectedDownloadType} options={this.qrcodeDownloadTypes} onChange={e => this.onDownloadTypeChanged(e.value)} placeholder="Select a Download Type" />
