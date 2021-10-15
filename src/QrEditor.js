@@ -12,8 +12,11 @@ import {get} from '@andreekeberg/imagedata'
 import QrReader from 'react-qr-reader'
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
+import { Slider } from 'primereact/slider';
 
 export default class QrEditor extends React.Component {
+
+    imageSizeRange = [0.5, 0.4, 0.3]
 
     dotsOptionsType = [
         {label: 'Rounded', value: 'rounded'},
@@ -36,8 +39,9 @@ export default class QrEditor extends React.Component {
     ];
 
     qrcodeDownloadTypes = [
-        {label: 'Jpeg', value : 'jpg'},
-        {label: 'Png', value : 'png'},
+        {label: 'jpeg', value : 'jpeg'},
+        {label: 'png', value : 'png'},
+        {label: 'svg', value : 'svg'},
     ]
 
     constructor(props) {
@@ -46,9 +50,10 @@ export default class QrEditor extends React.Component {
         this.state = {
             qrOptions : {
                 data : "https://master.d2g7knv9wv4iw9.amplifyapp.com/",
-                width: 500,
-                height: 500,
-                margin: 0,
+                width: 1000,
+                height: 1000,
+                type: "svg",
+                margin: 2,
                 image: "",
                 dotsOptions: {
                     color: "#000000",
@@ -58,6 +63,8 @@ export default class QrEditor extends React.Component {
                 imageOptions: {
                     crossOrigin: "anonymous",
                     hideBackgroundDots: false,
+                    imageSize : 0.3,
+                    margin: 5
                 },
                 cornersSquareOptions: {
                     color: "#000000",
@@ -68,7 +75,7 @@ export default class QrEditor extends React.Component {
                     color: "#000000",
                     type: "square",
                     gradient : ""
-                }
+                },
             },
             qrCode : new QRCodeStyling(),
             dotsOptionPanelCollapsed : false,
@@ -80,12 +87,20 @@ export default class QrEditor extends React.Component {
     componentDidMount() {
         this.state.qrCode.update(this.state.qrOptions)
         this.state.qrCode.append(this.qrImage.current)
+        this.qrImage.current.lastChild.setAttribute("preserveAspectRatio","none")
+        this.qrImage.current.lastChild.setAttribute("viewBox", "0 0 1000 1000")
+        this.qrImage.current.lastChild.removeAttribute("height")
+        this.qrImage.current.lastChild.removeAttribute("width")
 
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevState.qrOptions !== this.state.qrOptions){
             this.state.qrCode.update(this.state.qrOptions)
+            this.qrImage.current.lastChild.setAttribute("preserveAspectRatio","none")
+            this.qrImage.current.lastChild.setAttribute("viewBox", "0 0 1000 1000")
+            this.qrImage.current.lastChild.removeAttribute("height")
+            this.qrImage.current.lastChild.removeAttribute("width")
         }
     }
 
@@ -172,6 +187,7 @@ export default class QrEditor extends React.Component {
         this.setState( {
             selectedDownloadType : value
         })
+        console.log(this.state.qrCode.getRawData("png"))
     }
 
     onDownloadButtonClick(e){
@@ -179,11 +195,23 @@ export default class QrEditor extends React.Component {
         this.state.qrCode.download({extension : this.state.selectedDownloadType})
     }
 
+    setLogoSize(value){
+        this.setState(prevState => ({
+            qrOptions : {
+                ...prevState.qrOptions,
+                imageOptions : {
+                    ...prevState.qrOptions.imageOptions,
+                    imageSize: value/10
+                }
+            }
+        }))
+    }
+
     render() {
         return (
             <div className="QrEditor">
-                <div className="p-grid">
-                    <div className="p-col-12 p-lg-4 p-text-center">
+                <div className="p-grid p-nogutter">
+                    <div className="p-col-3 p-lg-4 p-text-center">
                         <label className="custom-file-upload">
                             <input type="file" accept="image/png, image/jpeg" onChange={ e => (this.onImageSelectorClick(e.target.files))}/>Choose your file
                         </label>
@@ -198,7 +226,7 @@ export default class QrEditor extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="p-col-12 p-lg-4">
+                    <div className="p-col-3 p-lg-4">
                         <Panel header="Shape & Form" toggleable collapsed={this.state.dotsOptionPanelCollapsed} onToggle={(e) => this.setState({dotsOptionPanelCollapsed : e.value})}>
                             <section>
                                 <h5>Dots shape</h5>
@@ -217,20 +245,15 @@ export default class QrEditor extends React.Component {
                             <label className="custom-file-upload">
                                 <input type="file" accept="image/png, image/jpeg" onChange={ e => (this.updateQrCodeLogo(e.target.files[0]))}/><span>Choose your logo</span>
                             </label>
+                            <Slider value={this.state.qrOptions.imageOptions.imageSize * 10} onChange={(e) => this.setLogoSize(e.value)} min={3} max={6} />
                         </Panel>
                     </div>
-                    <div className="p-col-12 p-lg-4">
-                        <div className="p-grid">
-                            <div className="p-col">
-                                <div ref={this.qrImage}/>
-                            </div>
-                        </div>
-                        <div className="p-grid">
+                    <div className="p-col-3 p-lg-4">
+                        <div style={{width: 500 , height: 500 }} ref={this.qrImage}/>
                             <div className="p-col">
                                 <Button label="Download QrCode" onClick={ e => this.onDownloadButtonClick(e)}/>
                                 <Dropdown value={this.state.selectedDownloadType} options={this.qrcodeDownloadTypes} onChange={e => this.onDownloadTypeChanged(e.value)} placeholder="Select a Download Type" />
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
