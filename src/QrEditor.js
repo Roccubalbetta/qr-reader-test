@@ -47,12 +47,13 @@ export default class QrEditor extends React.Component {
     constructor(props) {
         super(props);
         this.qrImage = React.createRef()
+        this.qrSvg = React.createRef()
         this.state = {
             qrOptions : {
                 data : "https://master.d2g7knv9wv4iw9.amplifyapp.com/",
-                width: 1000,
-                height: 1000,
-                type: "svg",
+                width: 2000,
+                height: 2000,
+                type: "canvas",
                 margin: 2,
                 image: "",
                 dotsOptions: {
@@ -86,19 +87,25 @@ export default class QrEditor extends React.Component {
 
     componentDidMount() {
         this.state.qrCode.update(this.state.qrOptions);
-        this.state.qrCode.append(this.qrImage.current);
-        this.qrImage.current.firstChild.setAttribute('viewBox', '0 0 1000 1000')
-        this.qrImage.current.firstChild.removeAttribute("height")
-        this.qrImage.current.firstChild.removeAttribute("width")
+        this.state.qrCode.append(this.qrSvg.current)
+        //this.getQrStylingPng()
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         if(prevState.qrOptions !== this.state.qrOptions){
             this.state.qrCode.update(this.state.qrOptions)
-            this.qrImage.current.firstChild.setAttribute('viewBox', '0 0 1000 1000')
-            this.qrImage.current.firstChild.removeAttribute("height")
-            this.qrImage.current.firstChild.removeAttribute("width")
+            //this.getQrStylingPng()
         }
+    }
+
+    getQrStylingPng(){
+        this.state.qrCode.getRawData("png")
+            .then(data => {
+                console.log(data)
+                this.qrImage.current.setAttribute('src', URL.createObjectURL(data))
+                console.log(this.qrImage.current.getAttribute('src'))
+            }).catch(e => console.log(e))
     }
 
     setDotOptionsValue(value){
@@ -184,7 +191,6 @@ export default class QrEditor extends React.Component {
         this.setState( {
             selectedDownloadType : value
         })
-        console.log(this.state.qrCode.getRawData("png"))
     }
 
     onDownloadButtonClick(e){
@@ -246,7 +252,8 @@ export default class QrEditor extends React.Component {
                         </Panel>
                     </div>
                     <div className="p-col-12 p-lg-4">
-                        <div style={{width : 500, height :500}} ref={this.qrImage}/>
+                        <div ref={this.qrSvg} className={"qr-code"}/>
+                        <img style={{width : 500, height :500}} ref={this.qrImage} alt="qrcode rendered"/>
                             <div className="p-col">
                                 <Button label="Download QrCode" onClick={ e => this.onDownloadButtonClick(e)}/>
                                 <Dropdown value={this.state.selectedDownloadType} options={this.qrcodeDownloadTypes} onChange={e => this.onDownloadTypeChanged(e.value)} placeholder="Select a Download Type" />

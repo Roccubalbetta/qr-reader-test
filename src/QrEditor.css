@@ -7,3 +7,15 @@ input[type="file"] {
     padding: 6px 12px;
     cursor: pointer;
 }
+
+.qr-code canvas {
+    max-width: 400px !important;
+    width: 100%;
+}
+
+.qr-code svg {
+    max-width: 400px !important;
+    max-height: 400px !important;
+    width: 100%;
+    height: 100%;
+}
